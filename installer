@@ -1,0 +1,92 @@
+#! /bin/bash
+set -euo pipefail
+
+# Define an array of required files
+required_files=(
+    "init.py"
+    "LICENSE"
+    "README.md"
+    "requirements.txt"
+    "src/ADB.py"
+    "src/commands.py"
+    "src/GUI.py"
+)
+
+# Function to check for required files
+check_files() {
+    for file in "${required_files[@]}"; do
+        if [ ! -f "$file" ]; then
+            echo "Error: Required file not found: $file"
+            exit 1
+        fi
+    done
+}
+
+# Call the function to check for files
+check_files
+
+echo " █████╗ ██████╗ ██████╗    ████████╗ ██████╗  ██████╗ ██╗      ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██║     ███████╗██████╗ ";
+echo "██╔══██╗██╔══██╗██╔══██╗   ╚══██╔══╝██╔═══██╗██╔═══██╗██║      ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗";
+echo "███████║██║  ██║██████╔╝█████╗██║   ██║   ██║██║   ██║██║█████╗██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝";
+echo "██╔══██║██║  ██║██╔══██╗╚════╝██║   ██║   ██║██║   ██║██║╚════╝██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗";
+echo "██║  ██║██████╔╝██████╔╝      ██║   ╚██████╔╝╚██████╔╝███████╗ ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║";
+echo "╚═╝  ╚═╝╚═════╝ ╚═════╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝ ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝";
+echo "                                                                                                                                     ";
+
+DISTRO=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
+
+# Check the distribution and perform logic based on it
+if [[ $DISTRO == "Ubuntu" ]]; then
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install python3 -y
+    sudo apr install adb -y
+    python -m venv .venv
+    chmod +x .venv/bin/activate
+    .venv/bin/pip install -r requirements.txt
+
+    echo "                                   ";
+    echo "██████╗  ██████╗ ███╗   ██╗███████╗";
+    echo "██╔══██╗██╔═══██╗████╗  ██║██╔════╝";
+    echo "██║  ██║██║   ██║██╔██╗ ██║█████╗  ";
+    echo "██║  ██║██║   ██║██║╚██╗██║██╔══╝  ";
+    echo "██████╔╝╚██████╔╝██║ ╚████║███████╗";
+    echo "╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝";
+    echo "                                   ";
+
+ elif [[ $DISTRO == "Fedora" ]]; then
+    sudo dnf update -y
+    sudo dnf install python3 -y
+    sudo dnf install android-tools -y
+    python3 -m venv .venv
+    chmod +x .venv/bin/activate
+    .venv/bin/pip install -r requirements.txt
+    echo "                                   ";
+    echo "██████╗  ██████╗ ███╗   ██╗███████╗";
+    echo "██╔══██╗██╔═══██╗████╗  ██║██╔════╝";
+    echo "██║  ██║██║   ██║██╔██╗ ██║█████╗  ";
+    echo "██║  ██║██║   ██║██║╚██╗██║██╔══╝  ";
+    echo "██████╔╝╚██████╔╝██║ ╚████║███████╗";
+    echo "╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝";
+    echo "                                   ";
+
+ 
+ elif [[ $DISTRO == "Arch Linux" ]]; then
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S python3 --noconfirm
+    sudo pacman -S android-tools --noconfirm
+    python -m venv .venv
+    chmod +x .venv/bin/activate
+    .venv/bin/pip install -r requirements.txt
+
+    echo "                                   ";
+    echo "██████╗  ██████╗ ███╗   ██╗███████╗";
+    echo "██╔══██╗██╔═══██╗████╗  ██║██╔════╝";
+    echo "██║  ██║██║   ██║██╔██╗ ██║█████╗  ";
+    echo "██║  ██║██║   ██║██║╚██╗██║██╔══╝  ";
+    echo "██████╔╝╚██████╔╝██║ ╚████║███████╗";
+    echo "╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝";
+    echo "                                   ";
+
+else
+    echo "This is an unknown or unsupported distribution: $DISTRO"
+fi

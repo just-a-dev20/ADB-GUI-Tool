@@ -1,91 +1,133 @@
 # ADB GUI Tool
-Note that this tool has a chance to brick your phone if you don't know what you're doing.
+
+**Warning:** This tool has the potential to brick your phone if not used carefully. Proceed with caution.
+
+A user-friendly graphical interface for ADB (Android Debug Bridge) and Fastboot commands, designed to simplify interaction with your Android device without the need for a terminal.
+
+![App Screenshot](https://imgur.com/a/msSYeJF)
+
 ## What is this?
-This is a tool utilizing Python to run ADB commands in a standalone app, instead of the terminal.
-## How do I set this up?
-See below - only dependency is Python and customtkinter (requires manual install on operating systems other than windows.)
 
-### Windows
-1. Unzip
-2. Run 'setup.bat' so that it installs a dependency needed for the program
-3. Open CMD and get into the directory that the app is in
-4. Run 'python app.py'
+This is a Python-based GUI tool that allows you to execute common ADB and Fastboot commands through a simple point-and-click interface. It's an alternative to the command line for managing your Android device. All commands are run in separate threads, so the GUI remains responsive while commands are executing.
 
-### Linux, MacOS (hopefully), etc.
-1. Unzip
-2. Delete EVERYTHING in the app except for 'app.py.' The setup script is only for Windows, and installs a dependency which can be manually installed. The rest of the files are the ADB dependencies for Windows.
-3. Open up your terminal and run 'pip install customtkinter'
-4. Install ADB onto your computer.
-5. Run the python script, and it should launch.
+## Project Structure
+The project is organized as follows:
+- **`init.py`**: The main entry point for the application.
+- **`src/GUI.py`**: Defines the graphical user interface.
+- **`src/ADB.py`**: Handles the logic for executing ADB and Fastboot commands.
+- **`src/commands.py`**: Contains the raw ADB and Fastboot commands.
 
-## What commands are currently implemented, and what do they do?
-### Scripting
-Reboot - Just reboots the phone.
+## Features
 
-Reboot Recovery - Reboots the phone into recovery.
+This tool implements a wide range of ADB and Fastboot functionalities:
 
-Reboot Fastboot - Reboots the phone into fastboot.
+### ADB Scripting
+- **Reboot:** Reboots the phone normally.
+- **Reboot Recovery:** Reboots the phone into recovery mode.
+- **Reboot Fastboot:** Reboots the phone into fastboot mode.
+- **Reboot Bootloader:** Reboots the phone into bootloader mode.
+- **Get State:** Prints the current state of the phone (e.g., recovery, device).
+- **Get Serial Number:** Prints the device's serial number.
+- **ADB Root:** Grants ADB root access.
 
-Get State Device - Prints the state that the phone is in. (recovery, device, etc.)
+### ADB Debugging & Server Management
+- **Logcat:** Provides a continuous log of device activity. Stop by pressing `Ctrl + C` in the console where the app is running.
+- **Start ADB Server:** Initiates the ADB server.
+- **Kill ADB Server:** Terminates the ADB server, which can help resolve connection issues.
+- **Reconnect Host:** Forces the host to reconnect to ADB.
+- **Reconnect Device:** Forces the device to reconnect to ADB.
+- **Reconnect Offline:** Resets and reconnects offline devices.
+- **View Devices:** Lists currently connected ADB devices.
 
-Get Serial Number - Prints the device's serial number.
-
-Root - Gives ADB root access.
-
-### Debugging
-Logcat - Gives you a constant log of what's happening in the phone. Stop by pressing Ctrl + C.
-
-Start Server - Starts the ADB server.
-
-Kill Server - Kills the ADB server. This could help to fix some issues when running commands.
-
-Reconnect - Kicks the host, forcing it to reconnect
-
-Reconnect device - Kicks the device, forcing it to reconnect
-
-Reconnect offline - Resets offline devices, forcing it to reconnect
-
-### File Transfer
-
-Install APK - Installs the APK. Use the first argument entry box for the path.
-
-Push - Pushes a file to a directory in the device. Use the first argument for the path to the file on the PC, then the second argument for the path on the android device.
-
-Pull - Pulls a file from the device to the computer. Use the first argument for the path to the file on the device.
-
-Remount - Remounts the device.
-
-Sideload - Sideloads ZIP files on the device. Make sure your device is on sideload mode. If you wanna check, use getstate.
+### ADB App Installation & File Transfer
+- **Install APK:** Installs an APK file. Use the first argument entry box for the path to the APK on your PC.
+- **Push:** Pushes a file from your computer to the device. Use the first argument for the PC file path and the second argument for the destination path on the Android device.
+- **Pull:** Pulls a file from the device to your computer. Use the first argument for the file path on the device.
+- **Remount:** Remounts the device's filesystem.
+- **Sideload:** Sideloads ZIP files onto the device. Ensure your device is in sideload mode (you can check its state with "Get State").
+- **Uninstall App:** Uninstalls an application. Use the first argument entry box for the package name.
+- **List Packages:** Lists all installed packages on the device.
+- **Get Android Version:** Retrieves the Android version of the connected device.
 
 ### Fastboot Basics
+- **Devices:** Shows devices currently connected in fastboot mode.
+- **Reboot:** Reboots the device to the system.
+- **Reboot to Recovery:** Reboots the device to recovery mode.
 
-View Devices - Shows devices currently connected in fastboot
+### Fastboot Bootloader Locking / Unlocking
+- **Unlock Bootloader:** Unlocks the bootloader, allowing unsigned firmware to be flashed. **Caution: This will factory reset your device.**
+- **Lock Bootloader:** Locks the bootloader, enabling signature checks for firmware. **Ensure your device is completely back to stock before running this.**
+- **Critical Unlock Bootloader:** Unlocks critical bootloader partitions.
+- **Critical Lock Bootloader:** Locks critical bootloader partitions.
 
-Reboot - Reboots to system
+## Installation
 
-Reboot to Recovery - Reboots to recovery
+### Prerequisites
 
-### Fastboot unlocking / locking bootloader
+*   Python 3.x
+*   ADB and Fastboot binaries installed and accessible in your system's PATH. You can download the latest platform tools from the official Android developer website: [https://developer.android.com/studio/releases/platform-tools](https://developer.android.com/studio/releases/platform-tools).
 
-Unlock Bootloader - Unlocks the bootloader, allowing unsigned firmware to be flashed
+### Steps
 
-Lock Bootloader - Locks the bootloader, checking if the firmware is signed. MAKE SURE YOU ARE COMPLETELY BACK TO STOCK BEFORE RUNNING THIS
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/parrots-14/ADB-GUI-Tool.git
+    cd ADB-GUI-Tool
+    ```
 
-Critical Unlock Bootloader - Unlocks critical bootloader partitions
+2.  **Install Python dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+    *Note: If you are on a non-Windows OS and encountered issues with `customtkinter` in a previous setup attempt, ensure you follow these steps for a clean install.*
 
-Critical Lock Bootloader - Locks critical bootloader partitions.
+## Usage
 
-## What commands could come soon?
-### Tentative
-None at the moment
-### Likely
-None at the moment
+1.  **Enable USB Debugging on your Android device:**
+    *   Go to `Settings` > `About phone`.
+    *   Tap on `Build number` seven times to enable `Developer options`.
+    *   Go back to the `Settings` menu, find `Developer options`, and enable `USB debugging`.
+    *   You may also need to authorize your computer when prompted on your phone.
 
-## How can I see the output?
-When you use CMD to open the .py file, the CMD will display the output.
+2.  **Connect your Android device to your computer via a USB cable.**
+
+3.  **Run the application:**
+    Open your terminal or command prompt in the `ADB-GUI-Tool` directory and execute:
+    ```bash
+    python init.py
+    ```
+    The application GUI will launch, and any command outputs will be displayed in the terminal where you launched the script.
+
+## Dependencies
+
+*   `tkinter` (built-in Python GUI library)
+*   `customtkinter` (for modern GUI elements)
 
 ## Troubleshooting
-### Waiting for device / Device not found
-Ensure you have the device plugged in, and USB Debugging enabled. To enable this, go to Settings > About Phone > Build Number (Tap 7 times) > Go back to Settings Menu > Developer Options. From there, enable USB debugging. The process may be different for different phones, but it typically involves this process. You'll have to trust the device too when you plug it in.
-### ADB server error
-This indicates that your ADB server is outdated. For Windows, delete everything in the directory except for the tool script itself, and then paste the platform tools ZIP into the directory and unzip it. For Linux, just run 'sudo apt-get install android-sdk-platform-tools' if on a Debian based distribution, or 'sudo dnf install android-tools' for Fedora based distributions.
+
+-   **"Waiting for device" / "Device not found"**:
+    *   Ensure your device is plugged in correctly and that USB Debugging is enabled (see Usage section for instructions).
+    *   Verify that you have authorized your computer on your phone when prompted.
+    *   Check if your ADB drivers are correctly installed on your computer.
+
+-   **"ADB server error"**:
+    *   This usually indicates an outdated ADB server.
+    *   **For Windows:** Delete any existing ADB binaries in the project directory (if any were copied there) and ensure that your system's PATH points to the up-to-date platform tools downloaded from the Android developer website.
+    *   **For Linux (Debian-based):** You might need to update your platform tools: `sudo apt-get install android-sdk-platform-tools`.
+    *   **For Linux (Fedora-based):** `sudo dnf install android-tools`.
+
+## Contributing
+
+Contributions are highly appreciated! If you have suggestions for new features, improvements, or bug fixes, please feel free to:
+
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/YourFeature`).
+3.  Make your changes.
+4.  Commit your changes (`git commit -m 'Add some feature'`).
+5.  Push to the branch (`git push origin feature/YourFeature`).
+6.  Open a Pull Request.
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
